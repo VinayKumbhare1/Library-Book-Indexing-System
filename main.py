@@ -1,32 +1,46 @@
-# Library Book Indexing System Using Hash Table
+# Library Book Indexing System Using Hash Tables
 
-books = {}
+class HashTable:
+    def __init__(self, size=10):
+        self.size = size
+        self.table = [[] for _ in range(size)]
 
-def add_book():
-    isbn = input("Enter ISBN: ")
-    title = input("Enter Book Title: ")
-    author = input("Enter Author: ")
+    # Hash function
+    def hash_function(self, isbn):
+        return int(isbn) % self.size
 
-    books[isbn] = {
-        "title": title,
-        "author": author
-    }
+    # Add book
+    def add_book(self, isbn, title, author):
+        index = self.hash_function(isbn)
 
-    print("Book added successfully!")
+        book = {
+            "isbn": isbn,
+            "title": title,
+            "author": author
+        }
 
+        self.table[index].append(book)
+        print("Book added successfully!")
+        print("Hash Index:", index)
 
-def search_book():
-    isbn = input("Enter ISBN to search: ")
+    # Search book
+    def search_book(self, isbn):
+        index = self.hash_function(isbn)
 
-    if isbn in books:
-        print("Book Found!")
-        print("Title:", books[isbn]["title"])
-        print("Author:", books[isbn]["author"])
-    else:
+        for book in self.table[index]:
+            if book["isbn"] == isbn:
+                print("\nBook Found!")
+                print("ISBN:", book["isbn"])
+                print("Title:", book["title"])
+                print("Author:", book["author"])
+                return
+
         print("Book not found!")
 
 
 def main():
+    library = HashTable()
+
     while True:
         print("\n===== LIBRARY BOOK INDEXING SYSTEM =====")
         print("1. Add Book")
@@ -36,12 +50,20 @@ def main():
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            add_book()
+            isbn = input("Enter ISBN: ")
+            title = input("Enter Book Title: ")
+            author = input("Enter Author: ")
+
+            library.add_book(isbn, title, author)
+
         elif choice == "2":
-            search_book()
+            isbn = input("Enter ISBN to search: ")
+            library.search_book(isbn)
+
         elif choice == "3":
             print("Thank you!")
             break
+
         else:
             print("Invalid choice!")
 

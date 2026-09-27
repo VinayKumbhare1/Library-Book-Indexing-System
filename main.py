@@ -13,7 +13,6 @@ class HashTable:
     def add_book(self, isbn, title, author):
         index = self.hash_function(isbn)
 
-        # Check duplicate ISBN
         for book in self.table[index]:
             if book["isbn"] == isbn:
                 print("Book with this ISBN already exists!")
@@ -56,6 +55,24 @@ class HashTable:
 
         print("Book not found!")
 
+    # Update book
+    def update_book(self, isbn):
+        index = self.hash_function(isbn)
+
+        for book in self.table[index]:
+            if book["isbn"] == isbn:
+                print("\nCurrent Details")
+                print("Title:", book["title"])
+                print("Author:", book["author"])
+
+                book["title"] = input("Enter new title: ")
+                book["author"] = input("Enter new author: ")
+
+                print("Book updated successfully!")
+                return
+
+        print("Book not found!")
+
     # Display all books
     def display_books(self):
         found = False
@@ -65,6 +82,7 @@ class HashTable:
         for index in range(self.size):
             for book in self.table[index]:
                 found = True
+
                 print("Index:", index)
                 print("ISBN:", book["isbn"])
                 print("Title:", book["title"])
@@ -75,6 +93,16 @@ class HashTable:
             print("No books available!")
 
 
+def get_isbn():
+    while True:
+        isbn = input("Enter ISBN: ")
+
+        if isbn.isdigit():
+            return isbn
+
+        print("Invalid ISBN! Please enter numbers only.")
+
+
 def main():
     library = HashTable()
 
@@ -83,30 +111,35 @@ def main():
         print("1. Add Book")
         print("2. Search Book")
         print("3. Delete Book")
-        print("4. Display All Books")
-        print("5. Exit")
+        print("4. Update Book")
+        print("5. Display All Books")
+        print("6. Exit")
 
         choice = input("Enter your choice: ")
 
         if choice == "1":
-            isbn = input("Enter ISBN: ")
+            isbn = get_isbn()
             title = input("Enter Book Title: ")
             author = input("Enter Author: ")
 
             library.add_book(isbn, title, author)
 
         elif choice == "2":
-            isbn = input("Enter ISBN to search: ")
+            isbn = get_isbn()
             library.search_book(isbn)
 
         elif choice == "3":
-            isbn = input("Enter ISBN to delete: ")
+            isbn = get_isbn()
             library.delete_book(isbn)
 
         elif choice == "4":
-            library.display_books()
+            isbn = get_isbn()
+            library.update_book(isbn)
 
         elif choice == "5":
+            library.display_books()
+
+        elif choice == "6":
             print("Thank you!")
             break
 

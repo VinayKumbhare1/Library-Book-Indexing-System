@@ -13,6 +13,12 @@ class HashTable:
     def add_book(self, isbn, title, author):
         index = self.hash_function(isbn)
 
+        # Check duplicate ISBN
+        for book in self.table[index]:
+            if book["isbn"] == isbn:
+                print("Book with this ISBN already exists!")
+                return
+
         book = {
             "isbn": isbn,
             "title": title,
@@ -20,6 +26,7 @@ class HashTable:
         }
 
         self.table[index].append(book)
+
         print("Book added successfully!")
         print("Hash Index:", index)
 
@@ -37,6 +44,36 @@ class HashTable:
 
         print("Book not found!")
 
+    # Delete book
+    def delete_book(self, isbn):
+        index = self.hash_function(isbn)
+
+        for book in self.table[index]:
+            if book["isbn"] == isbn:
+                self.table[index].remove(book)
+                print("Book deleted successfully!")
+                return
+
+        print("Book not found!")
+
+    # Display all books
+    def display_books(self):
+        found = False
+
+        print("\n===== ALL BOOKS =====")
+
+        for index in range(self.size):
+            for book in self.table[index]:
+                found = True
+                print("Index:", index)
+                print("ISBN:", book["isbn"])
+                print("Title:", book["title"])
+                print("Author:", book["author"])
+                print("--------------------")
+
+        if not found:
+            print("No books available!")
+
 
 def main():
     library = HashTable()
@@ -45,7 +82,9 @@ def main():
         print("\n===== LIBRARY BOOK INDEXING SYSTEM =====")
         print("1. Add Book")
         print("2. Search Book")
-        print("3. Exit")
+        print("3. Delete Book")
+        print("4. Display All Books")
+        print("5. Exit")
 
         choice = input("Enter your choice: ")
 
@@ -61,6 +100,13 @@ def main():
             library.search_book(isbn)
 
         elif choice == "3":
+            isbn = input("Enter ISBN to delete: ")
+            library.delete_book(isbn)
+
+        elif choice == "4":
+            library.display_books()
+
+        elif choice == "5":
             print("Thank you!")
             break
 
